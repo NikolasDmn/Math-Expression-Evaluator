@@ -1,4 +1,3 @@
-use std::f32::consts::E;
 use crate::parser::{NodeBinExpr, NodeExpr, Operation};
 
 pub(crate) struct Evaluator {

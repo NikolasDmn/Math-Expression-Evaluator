@@ -58,17 +58,6 @@ pub(crate) struct NodeBinExpr {
     pub(crate) rhs: NodeExpr,
 }
 
-fn determine_precedence(token_type: &TokenType)->i32 {
-    return match token_type{
-        TokenType::ADD=>0,
-        TokenType::SUB=>0,
-        TokenType::MUL=>1,
-        TokenType::DIV=>1,
-        TokenType::EXP=>2,
-        _=> -1,
-    }
-}
-
 pub(crate) struct Parser {
     tokens: Vec<Token>,
     token_index: usize,
