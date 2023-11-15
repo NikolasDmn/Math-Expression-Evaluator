@@ -1,7 +1,7 @@
 use crate::tokenizer::{Token, TokenType};
 #[derive(PartialEq)]
 #[derive(Debug)]
-enum  NodeExpr {
+pub(crate) enum  NodeExpr {
     SIN(Box<NodeExprSin>),
     COS(Box<NodeExprCos>),
     LN(Box<NodeExprLn>),
@@ -13,37 +13,37 @@ enum  NodeExpr {
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprSin {
-    expr: NodeExpr,
+pub(crate) struct NodeExprSin {
+    pub(crate) expr: NodeExpr,
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprCos {
-    expr: NodeExpr,
+pub(crate) struct NodeExprCos {
+    pub(crate) expr: NodeExpr,
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprLn {
-    expr: NodeExpr,
+pub(crate) struct NodeExprLn {
+    pub(crate) expr: NodeExpr,
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprLog {
-    expr: NodeExpr,
+pub(crate) struct NodeExprLog {
+    pub(crate) expr: NodeExpr,
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprInt {
-    val: i32
+pub(crate) struct NodeExprInt {
+    pub(crate) val: i32
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeExprFloat {
-    val: f32
+pub(crate) struct NodeExprFloat {
+    pub(crate) val: f32
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-enum Operation {
+pub(crate) enum Operation {
     ADD,
     SUB,
     MUL,
@@ -52,10 +52,10 @@ enum Operation {
 }
 #[derive(PartialEq)]
 #[derive(Debug)]
-struct NodeBinExpr {
-    operation: Operation,
-    lhs: NodeExpr,
-    rhs: NodeExpr,
+pub(crate) struct NodeBinExpr {
+    pub(crate) operation: Operation,
+    pub(crate) lhs: NodeExpr,
+    pub(crate) rhs: NodeExpr,
 }
 
 fn determine_precedence(token_type: &TokenType)->i32 {
@@ -69,17 +69,17 @@ fn determine_precedence(token_type: &TokenType)->i32 {
     }
 }
 
-struct Parser {
+pub(crate) struct Parser {
     tokens: Vec<Token>,
     token_index: usize,
 }
 
 impl Parser {
-    fn new(tokens: Vec<Token>) ->Parser {
+    pub(crate) fn new(tokens: Vec<Token>) ->Parser {
         Parser{tokens,token_index:0}
     }
 
-    fn parse(&mut self) -> Option<NodeExpr> {
+    pub(crate) fn parse(&mut self) -> Option<NodeExpr> {
         self.parse_expr()
     }
     fn parse_bin_expr(&mut self, mut lhs: NodeExpr, min_prec: i32) -> Option<NodeExpr> {
@@ -115,7 +115,7 @@ impl Parser {
         }
     }
     fn parse_primary_expr(&mut self) -> Option<NodeExpr> {
-        let token_type = self.peek()?.token_type.clone();;
+        let token_type = self.peek()?.token_type.clone();
 
         match token_type {
             TokenType::INT | TokenType::FLOAT => {
@@ -141,7 +141,7 @@ impl Parser {
                 self.consume(); // Consume the function token
                 if self.peek().map_or(false, |t| t.token_type == TokenType::OpenParen) {
                     self.consume(); // Consume the '(' token
-                    let inside_expr = self.parse_primary_expr().expect("No expression found inside parenthesis.");
+                    let inside_expr = self.parse_expr().expect("No expression found inside parenthesis.");
                     if self.peek().map_or(false, |t| t.token_type == TokenType::CloseParen) {
                         self.consume(); // Consume the ')' token
                         match token_type {
